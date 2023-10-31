@@ -1,0 +1,5 @@
+python3 -m venv venv 
+me crea el directorio aparte para colocar todo lo relacionado a mi entorno virtual
+
+source venv/bin/activate
+me activa el entorno virtual
