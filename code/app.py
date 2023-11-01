@@ -1,18 +1,15 @@
 from flask import Flask
 from flask import jsonify
 
-def create_app(enviroment):
-    app = Flask(__name__)
-    return app
 
-app = create_app()
+app = Flask(__name__)
 
-app.route('/api/v1/users', methods=['GET'])
+@app.route('/api/v1/users', methods=['GET'])
 def get_users():
     response = {'message': 'success'}
     return jsonify(response)
 
-app.route('/api/v1/users/<id>', methods=['GET'])
+@app.route('/api/v1/users/<id>', methods=['GET'])
 def get_user(id):
     response = {'message': 'success'}
     return jsonify(response)
@@ -33,4 +30,4 @@ def delete_user(id):
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port="8000")
