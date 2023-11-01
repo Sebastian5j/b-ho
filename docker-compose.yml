@@ -15,4 +15,4 @@ services:
       MYSQL_ROOT_PASSWORD: 1197sebas
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./data:/var/lib/mysql
+      - ./db/data:/var/lib/mysql
