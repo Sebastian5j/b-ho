@@ -3,18 +3,26 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-MY_ENV_VAR = os.getenv('MY_ENV_VAR')
+USER        = os.getenv('USER_BUHO_LEGAL')
+PASSWORD    = os.getenv('PASSWORD')
+API_BASE    = os.getenv('API_BASE')
 
 class BuhoLegal:
+    def __init__(self, user = USER, password = PASSWORD):
+        self.user = user
+        self.password = password
+        self.token = None
+
     def get_token(self):
-        credenciales = { 'username' : 'sebastianqjuarez@gmail.com', 'password' : 'p4r4BuhoLegal' }
-        respose = requests.post('https://api.buholegal.com/apikey/', data=credenciales) 
+        credenciales = { 'username' : self.user, 'password' : self.password}
+        respose = requests.post(f'{API_BASE}/apikey/', data=credenciales) 
         if respose.status_code == 200:
             token = respose.json()['token']
             print(token)
             self.token = token
         else:
             raise Exception("No pude obtener el token necesario")
+        return token
 
 class Manager:
     
