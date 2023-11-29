@@ -2,4 +2,4 @@ notas.txt
 **/logs
 
 db/data/*
-code/.env
+.env
