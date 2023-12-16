@@ -3,3 +3,4 @@ notas.txt
 
 db/data/*
 .env
+*.log
