@@ -39,17 +39,26 @@ class BuhoLegal:
         logger.debug("Guardado!")
 
         logger.debug("Conectado!")
+
+    def create_user(self):
+        headers = { 'Authorization' : 'Token ' + self.__token }
+        data = { 'username' : 'maik69', 'password' : '3jemploPassword', 'confirm_password' : '3jemploPassword', 'description' : 'Mi compa el chueco' }
+        respose = requests.post('https://api.buholegal.com/crear_usuario/', data=data, headers=headers)
+        logger.debug(f"response: {respose.json()}")
+        return respose.json()
     
 class Manager:
     
     def __init__(self, buho: BuhoLegal) -> None:
         self._buho = buho or BuhoLegal()
 
-    def connect_to_buho(self) -> str:
+    def create_user(self) -> str:
         self._buho.connect()
+        self._buho.create_user()
     
 def client_code(facade: Manager) -> None:
-    facade.connect_to_buho()
+    facade.create_user()
+    
 
 
 if __name__ == "__main__":
