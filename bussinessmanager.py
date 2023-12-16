@@ -1,19 +1,21 @@
 import requests
-import os
+import os, json
 from dotenv import load_dotenv
 load_dotenv()
 import my_tools
-USER        = os.getenv('USER_BUHO_LEGAL')
-PASSWORD    = os.getenv('PASSWORD')
-API_BASE    = os.getenv('API_BASE')
-logger = my_tools.get_a_logger()
+USER                = os.getenv('USER_BUHO_LEGAL')
+PASSWORD            = os.getenv('PASSWORD')
+API_BASE            = os.getenv('API_BASE')
+BUHO_CREDENTIALS    = os.getenv('BUHO_CREDENTIALS')
+
+logger              = my_tools.get_a_logger()
 
 class BuhoLegal:
     def __init__(self, user = USER, password = PASSWORD):
         logger.debug("Creando Fachada BuhoLegal...")
         self.user = user
         self.password = password
-        self.token = None
+        self.__token = None
 
     def __get_token(self) -> None:
         logger.debug("Recuperando Token para conectarme a la API Buho legal")
@@ -22,7 +24,7 @@ class BuhoLegal:
         if respose.status_code == 200:
             logger.debug("Token recuperado!")
             token = respose.json()['token']
-            self.token = token
+            self.__token = token
         else:
             logger.error(f"No se autentico correctamente con la API: {respose}")
             raise Exception("No pude obtener el token necesario")
@@ -30,6 +32,12 @@ class BuhoLegal:
     def connect(self):
         logger.debug("Conectando a Buho Legal...")
         self.__get_token()
+        logger.debug(f"Guardando el token...")
+        data = {"token": self.__token}
+        with open(BUHO_CREDENTIALS, 'w') as f:
+            json.dump(data, f)
+        logger.debug("Guardado!")
+
         logger.debug("Conectado!")
     
 class Manager:
