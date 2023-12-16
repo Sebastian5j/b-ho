@@ -2,27 +2,30 @@ import requests
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
+import my_tools
 USER        = os.getenv('USER_BUHO_LEGAL')
 PASSWORD    = os.getenv('PASSWORD')
 API_BASE    = os.getenv('API_BASE')
+logger = my_tools.get_a_logger()
 
 class BuhoLegal:
     def __init__(self, user = USER, password = PASSWORD):
+        logger.debug("Creando Fachada BuhoLegal...")
         self.user = user
         self.password = password
         self.token = None
 
-    def get_token(self):
+    def get_token(self) -> None:
+        logger.debug("Recuperando Token para conectarme a la API Buho legal")
         credenciales = { 'username' : self.user, 'password' : self.password}
         respose = requests.post(f'{API_BASE}/apikey/', data=credenciales) 
         if respose.status_code == 200:
+            logger.debug("Token recuperado!")
             token = respose.json()['token']
-            print(token)
             self.token = token
         else:
+            logger.error(f"No se autentico correctamente con la API: {respose}")
             raise Exception("No pude obtener el token necesario")
-        return token
 
 class Manager:
     
@@ -30,8 +33,7 @@ class Manager:
         self._buho = buho or BuhoLegal()
 
     def get_token(self) -> str:
-        token = self._buho.get_token()
-        return token
+        self._buho.get_token()
     
 def client_code(facade: Manager) -> None:
     facade.get_token()
