@@ -15,7 +15,7 @@ class BuhoLegal:
         self.password = password
         self.token = None
 
-    def get_token(self) -> None:
+    def __get_token(self) -> None:
         logger.debug("Recuperando Token para conectarme a la API Buho legal")
         credenciales = { 'username' : self.user, 'password' : self.password}
         respose = requests.post(f'{API_BASE}/apikey/', data=credenciales) 
@@ -26,17 +26,22 @@ class BuhoLegal:
         else:
             logger.error(f"No se autentico correctamente con la API: {respose}")
             raise Exception("No pude obtener el token necesario")
-
+    
+    def connect(self):
+        logger.debug("Conectando a Buho Legal...")
+        self.__get_token()
+        logger.debug("Conectado!")
+    
 class Manager:
     
     def __init__(self, buho: BuhoLegal) -> None:
         self._buho = buho or BuhoLegal()
 
-    def get_token(self) -> str:
-        self._buho.get_token()
+    def connect_to_buho(self) -> str:
+        self._buho.connect()
     
 def client_code(facade: Manager) -> None:
-    facade.get_token()
+    facade.connect_to_buho()
 
 
 if __name__ == "__main__":
