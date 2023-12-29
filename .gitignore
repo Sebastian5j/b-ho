@@ -5,3 +5,4 @@ db/data/*
 .env
 *.log
 buho_credentials.json
+credentials.json
