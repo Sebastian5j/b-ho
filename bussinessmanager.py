@@ -7,6 +7,8 @@ USER                = os.getenv('USER_BUHO_LEGAL')
 PASSWORD            = os.getenv('PASSWORD')
 API_BASE            = os.getenv('API_BASE')
 BUHO_CREDENTIALS    = os.getenv('BUHO_CREDENTIALS')
+API_CREATE_USER     = os.getenv('API_CREATE_USER')
+API_GET_TOKEN       = os.getenv('API_GET_TOKEN')
 
 logger              = my_tools.get_a_logger()
 
@@ -18,9 +20,10 @@ class BuhoLegal:
         self.__token = None
 
     def __get_token(self) -> None:
-        logger.debug("Recuperando Token para conectarme a la API Buho legal")
+        logger.debug(f"Recuperando Token para conectarme a la API Buho legal: {API_GET_TOKEN}")
         credenciales = { 'username' : self.user, 'password' : self.password}
-        respose = requests.post(f'{API_BASE}/apikey/', data=credenciales) 
+        logger.debug(f"credenciales: {credenciales}")
+        respose = requests.post(API_GET_TOKEN, data=credenciales) 
         if respose.status_code == 200:
             logger.debug("Token recuperado!")
             token = respose.json()['token']
@@ -40,10 +43,14 @@ class BuhoLegal:
 
         logger.debug("Conectado!")
 
-    def create_user(self):
+    def create_user(self, **kwargs):
+        logger.debug(f"Creando usuario hacia la API: {API_CREATE_USER}")
         headers = { 'Authorization' : 'Token ' + self.__token }
+        """
         data = { 'username' : 'maik69', 'password' : '3jemploPassword', 'confirm_password' : '3jemploPassword', 'description' : 'Mi compa el chueco' }
-        respose = requests.post('https://api.buholegal.com/crear_usuario/', data=data, headers=headers)
+        """
+        data = { 'username' : 'maik69', 'password' : '3jemploPassword', 'confirm_password' : '3jemploPassword', 'description' : 'Mi compa el chueco' }  
+        respose = requests.post(API_CREATE_USER, data=data, headers=headers)
         logger.debug(f"response: {respose.json()}")
         return respose.json()
     
